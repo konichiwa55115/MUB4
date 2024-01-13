@@ -21,7 +21,7 @@ bot = Client(
     "audiobot",
     api_id=17983098,
     api_hash="ee28199396e0925f1f44d945ac174f64",
-    bot_token="6466415254:AAE_m_mYGHFuu3MT4T0qzqVCm0WvR4biYvM"
+    bot_token="6812722455:AAEjCb1ZwgBa8DZ4_wVNNjDZbe6EtQZOUxo"
 )
 #6032076608:AAGhqffAlibHd7pipzA3HR2-0Ca3sDFlmdI 
 #5782497998:AAFdx2dX3yeiyDIcoJwPa_ghY2h_dozEh_E
@@ -340,30 +340,36 @@ def command2(bot,message):
 def command2(bot,message):
     os.remove("ytplst.txt")
     os.remove("yttransy.txt")
-    
+queeq = []   
 @bot.on_message(filters.private & filters.incoming & filters.voice | filters.audio | filters.video | filters.document | filters.photo | filters.animation )
-def _telegram_file(client, message):
-  global user_id ,file_path,filename,nom,ex,mp4file,mp3file,m4afile,spdrateaud,mergdir,trimdir,result,nepho
-  nepho = message
-  user_id = nepho.from_user.id
-  x =  nepho.download(file_name="./downloads/")
-  file_path = x.replace('＂', '').replace('"', '').replace("'", "").replace("｜", "").replace("|", "")
-  if file_path == x :
+async def _telegram_file(client, message):
+ global user_id ,file_path,filename,nom,ex,mp4file,mp3file,m4afile,spdrateaud,mergdir,trimdir,result,nepho
+ if len(queeq) == 0 : 
+    pass
+ else :
+    await asyncio.sleep(30)
+    queeq.clear()
+    pass
+ nepho = message
+ user_id = nepho.from_user.id
+ queeq.append(user_id)
+ x =  await nepho.download(file_name="./downloads/")
+ file_path = x.replace('＂', '').replace('"', '').replace("'", "").replace("｜", "").replace("|", "")
+ if file_path == x :
      pass
-  else :
+ else :
      os.rename(x,file_path)
-  nepho.reply(text = CHOOSE_UR_AUDIO_MODE,reply_markup = InlineKeyboardMarkup(CHOOSE_UR_AUDIO_MODE_BUTTONS))
-  filename = os.path.basename(file_path)
-  nom,ex = os.path.splitext(filename)
-  mp4file = f"{nom}.mp4"
-  mp3file = f"{nom}.mp3"
-  m4afile = f"{nom}.m4a"
-  mergdir = f"./mergy/{mp3file}"
-  trimdir = f"./trimmo/{mp3file}" 
-  result = f"{nom}.txt"
-      
-@bot.on_callback_query()
-async def callback_query(CLIENT,CallbackQuery): 
+ await nepho.reply(text = CHOOSE_UR_AUDIO_MODE,reply_markup = InlineKeyboardMarkup(CHOOSE_UR_AUDIO_MODE_BUTTONS))
+ filename = os.path.basename(file_path)
+ nom,ex = os.path.splitext(filename)
+ mp4file = f"{nom}.mp4"
+ mp3file = f"{nom}.mp3"
+ m4afile = f"{nom}.m4a"
+ mergdir = f"./mergy/{mp3file}"
+ trimdir = f"./trimmo/{mp3file}" 
+ result = f"{nom}.txt"    
+ @bot.on_callback_query()
+ async def callback_query(CLIENT,CallbackQuery): 
   global amplemode
   await CallbackQuery.edit_message_text("جار العمل")
   if CallbackQuery.data == "amplifyaud":
@@ -493,10 +499,10 @@ async def callback_query(CLIENT,CallbackQuery):
 
   elif CallbackQuery.data == "aud":
     await CallbackQuery.edit_message_text("جار التضخيم ")
-    cmd(f'''ffmpeg -i "{file_path}" -filter:a volume={amplemode}dB "{filename}"''')
-    await bot.send_audio(user_id, filename)
+    cmd(f'''ffmpeg -i "{file_path}" -filter:a volume={amplemode}dB "{mp3file}"''')
+    await bot.send_audio(user_id, mp3file)
     os.remove(file_path) 
-    os.remove(filename) 
+    os.remove(mp3file) 
 
   elif CallbackQuery.data == "vid":
     await CallbackQuery.edit_message_text("جار التضخيم " )
@@ -861,7 +867,7 @@ async def callback_query(CLIENT,CallbackQuery):
         os.remove(subfile)
         os.remove(vidfile)
         os.remove(mp4file)
-
+  queeq.clear()
 
 
      
